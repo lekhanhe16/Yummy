@@ -17,4 +17,8 @@ class OnboardingViewModel {
     func getSlides() -> [OnboardingSlide] {
         return slides
     }
+    
+    func isOnboardingFinished() -> Bool{
+        return UserDefaults.standard.bool(forKey: Constant.IS_ONBOARDING)
+    }
 }

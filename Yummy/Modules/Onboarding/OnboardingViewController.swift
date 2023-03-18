@@ -14,7 +14,6 @@ class OnboardingViewController: UIViewController {
     let viewModel = OnboardingViewModel()
     var currentPage = 0 {
         didSet {
-            print(currentPage)
             pageControl.currentPage = currentPage
             (currentPage == viewModel.getSlides().count - 1) ? btnNextSlide.setTitle("Get started", for: .normal) : btnNextSlide.setTitle("Next", for: .normal)
         }
@@ -23,13 +22,34 @@ class OnboardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        pageControl.numberOfPages = viewModel.getSlides().count
+        
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if viewModel.isOnboardingFinished() {
+            print("Here")
+            let storyBoard = UIStoryboard(name: "Home", bundle: nil)
+            let homeVC = storyBoard.instantiateViewController(withIdentifier: "HomeVC")
+            homeVC.modalPresentationStyle = .fullScreen
+            present(homeVC, animated: true)
+        }
+        else {
+            collectionView.dataSource = self
+            collectionView.delegate = self
+            pageControl.numberOfPages = viewModel.getSlides().count
+        }
+    }
     @IBAction func btnNextClicked(_ sender: UIButton) {
-        if currentPage == viewModel.getSlides().count - 1 {}
+        if currentPage == viewModel.getSlides().count - 1 {
+            UserDefaults.standard.set(true, forKey: Constant.IS_ONBOARDING)
+            let storyBoard = UIStoryboard(name: "Home", bundle: nil)
+            let homeVC = storyBoard.instantiateViewController(withIdentifier: "HomeVC")
+            homeVC.modalPresentationStyle = .fullScreen
+            homeVC.modalTransitionStyle = .flipHorizontal
+            present(homeVC, animated: true)
+            
+        }
         else {
             collectionView.isPagingEnabled = false
             currentPage += 1

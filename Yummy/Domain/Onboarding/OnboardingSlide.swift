@@ -12,3 +12,9 @@ struct OnboardingSlide {
     let description: String
     let image: UIImage
 }
+
+
+struct Response: Decodable {
+    let status:Int
+    let message:String
+}

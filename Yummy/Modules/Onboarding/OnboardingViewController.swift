@@ -12,6 +12,7 @@ class OnboardingViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var btnNextSlide: UIButton!
     let viewModel = OnboardingViewModel()
+    var isOnboard = false
     var currentPage = 0 {
         didSet {
             pageControl.currentPage = currentPage
@@ -22,24 +23,35 @@ class OnboardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if viewModel.isOnboardingFinished() {
-            print("Here")
-            let storyBoard = UIStoryboard(name: "Home", bundle: nil)
-            let homeVC = storyBoard.instantiateViewController(withIdentifier: "HomeVC")
-            homeVC.modalPresentationStyle = .fullScreen
-            present(homeVC, animated: true)
-        }
-        else {
+        isOnboard = viewModel.isOnboardingFinished()
+        if !isOnboard {
             collectionView.dataSource = self
             collectionView.delegate = self
             pageControl.numberOfPages = viewModel.getSlides().count
         }
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if isOnboard {
+            print("Here")
+//            let storyBoard = UIStoryboard(name: "Home", bundle: nil)
+//            let homeVC = storyBoard.instantiateViewController(withIdentifier: "HomeVC")
+            ////            homeVC.modalPresentationStyle = .fullScreen
+//            let navController = UINavigationController(rootViewController: homeVC)
+//            navController.modalPresentationStyle = .fullScreen
+//            present(navController, animated: true)
+
+            let storyBoard = UIStoryboard(name: "Test", bundle: nil)
+            let homeVC = storyBoard.instantiateViewController(withIdentifier: "ViewController")
+//            homeVC.modalPresentationStyle = .fullScreen
+            let navController = UINavigationController(rootViewController: homeVC)
+            navController.modalPresentationStyle = .fullScreen
+//            homeVC.modalPresentationStyle = .fullScreen
+            present(navController, animated: true)
+        }
+    }
+
     @IBAction func btnNextClicked(_ sender: UIButton) {
         if currentPage == viewModel.getSlides().count - 1 {
             UserDefaults.standard.set(true, forKey: Constant.IS_ONBOARDING)
@@ -48,7 +60,6 @@ class OnboardingViewController: UIViewController {
             homeVC.modalPresentationStyle = .fullScreen
             homeVC.modalTransitionStyle = .flipHorizontal
             present(homeVC, animated: true)
-            
         }
         else {
             collectionView.isPagingEnabled = false

@@ -8,6 +8,10 @@
 import UIKit
 
 class OnboardingPageCollectionViewCell: UICollectionViewCell, BaseCell {
+    static func nib() -> UINib {
+        return UINib()
+    }
+    
     func configCell<T>(item: T) {
         let item = item as! OnboardingSlide
         imageView.image = item.image

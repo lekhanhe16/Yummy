@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import UIKit.UINib
 
-protocol BaseCell {
+protocol BaseCell : UICollectionViewCell{
     func configCell<T>(item: T)
     static var reusableIdentifier: String {get}
+    static func nib() -> UINib
 }
